@@ -1,0 +1,33 @@
+@namespace ExamplePegProject
+@classname MathExpressionParser
+
+start <Command> -lexical
+  = _ value:additive _ EOF { value }
+
+additive <Command> -memoize -lexical
+    = left:additive _ "+" _ right:multiplicative { new Operator2(left, "+", right) }
+    / left:additive _ "-" _ right:multiplicative { new Operator2(left, "-", right) }
+    / multiplicative
+
+multiplicative <Command> -memoize -lexical
+    = left:multiplicative _ "*" _ right:power { new Operator2(left, "*", right) }
+    / left:multiplicative _ "/" _ right:power { new Operator2(left, "/", right) }
+    / power
+
+power <Command> -lexical
+    = left:primary _ "^" _ right:power { new Operator2(left, "^", right) }
+    / primary
+
+primary <Command> -memoize -lexical
+    = v:decimal                        { new SingleValue(v) }
+    / "-" _ primary:primary            { new Operator1("-", primary) }
+    / "(" _ additive:additive _ ")"    { new Brace(additive) }
+
+decimal <string>
+    = v:([0-9a-zA-Z.]+)                { String.Join("", v) }
+
+_ = [ \t\r\n]*
+
+EOF
+  = !.
+  / unexpected:. #error{ "Unexpected character '" + unexpected + "'." }

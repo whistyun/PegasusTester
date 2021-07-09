@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PegasusTester", "PegasusTester\PegasusTester.csproj", "{C20AB68D-8654-405F-A3EE-AF19E896CBFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePegProject", "ExamplePegProject\ExamplePegProject.csproj", "{BE11A0E2-BE10-4D34-8730-FA9116DB06BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C20AB68D-8654-405F-A3EE-AF19E896CBFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20AB68D-8654-405F-A3EE-AF19E896CBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20AB68D-8654-405F-A3EE-AF19E896CBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20AB68D-8654-405F-A3EE-AF19E896CBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE11A0E2-BE10-4D34-8730-FA9116DB06BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE11A0E2-BE10-4D34-8730-FA9116DB06BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE11A0E2-BE10-4D34-8730-FA9116DB06BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE11A0E2-BE10-4D34-8730-FA9116DB06BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC5F2DBF-1C1E-49FE-960A-06A9F130F958}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:PegasusTester.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="PegasusTester.Views.ProjectConfigPanel">
+
+  <UserControl.DataContext>
+    <vm:ProjectConfigPanelViewModel/>
+  </UserControl.DataContext>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="10*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="100*"/>
+      <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+
+    <Grid.Styles>
+      <Style Selector="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="8,0"/>
+      </Style>
+      <Style Selector="TextBox">
+        <Setter Property="Margin" Value="0,4,8,4"/>
+      </Style>
+      <Style Selector="Button">
+        <Setter Property="Margin" Value="0,4,8,4"/>
+      </Style>
+      <Style Selector="ListBox">
+        <Setter Property="Margin" Value="0,4,8,4"/>
+      </Style>
+    </Grid.Styles>
+
+    <TextBlock Grid.Row="0" Grid.Column="0">
+      csproj path
+    </TextBlock>
+
+    <TextBox Grid.Row="0" Grid.Column="1"
+        x:Name="ProjectFilePath"
+        Text="{Binding ProjectFilePath}" />
+
+    <Button Grid.Row="0" Grid.Column="2" Click="Button_Click">
+      Browse
+    </Button>
+
+    <TextBlock Grid.Row="1" Grid.Column="0">
+      assembly path&#xD;(*.exe, *.dll)
+    </TextBlock>
+
+    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+        Text="{Binding AssemblyPath}" />
+
+    <TextBlock Grid.Row="2" Grid.Column="0">
+      Build command
+    </TextBlock>
+
+    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+        Text="{Binding BuildCommand}" />
+
+    <TextBlock Grid.Row="3" Grid.Column="0">
+      peg files
+    </TextBlock>
+
+    <ListBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+        Items="{Binding PegSources}"/>
+  </Grid>
+
+</UserControl>

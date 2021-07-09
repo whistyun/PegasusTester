@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PegasusTester.ViewModels"
+        xmlns:vw="using:PegasusTester.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        x:Class="PegasusTester.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="PegasusTester">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <TabControl TabStripPlacement="Top" Items="{Binding TabItems}">
+    <TabControl.Styles>
+      <Style Selector="TabItem">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="MinHeight" Value="40"/>
+      </Style>
+    </TabControl.Styles>
+
+    <TabControl.ItemTemplate>
+      <vw:TypeMatchingSelector>
+        <DataTemplate DataType="vm:ProjectConfigPanelViewModel">
+          <TextBlock>Config</TextBlock>
+        </DataTemplate>
+        <DataTemplate DataType="vm:BuildResultViewModel">
+          <DockPanel LastChildFill="True">
+            <TextBlock Text="✖" IsVisible="{Binding HasError}" />
+            <TextBlock>Console</TextBlock>
+          </DockPanel>
+        </DataTemplate>
+        <DataTemplate DataType="vm:PegGrammarEditorViewModel">
+          <DockPanel LastChildFill="True">
+            <TextBlock Text="✖" IsVisible="{Binding IsBad}" />
+            <TextBlock Text="{Binding Header}"/>
+            <TextBlock Text="*" IsVisible="{Binding IsDirty}"/>
+          </DockPanel>
+        </DataTemplate>
+      </vw:TypeMatchingSelector>
+    </TabControl.ItemTemplate>
+    <TabControl.ContentTemplate>
+      <vw:TypeMatchingSelector>
+        <DataTemplate DataType="vm:ProjectConfigPanelViewModel">
+          <vw:ProjectConfigPanel/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:BuildResultViewModel">
+          <vw:BuildResult/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:PegGrammarEditorViewModel">
+          <vw:PegGrammarEditor/>
+        </DataTemplate>
+      </vw:TypeMatchingSelector>
+    </TabControl.ContentTemplate>
+  </TabControl>
+</Window>

@@ -1,0 +1,139 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:bv="using:PegasusTester.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="PegasusTester.Views.PegGrammarEditor">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="10*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="10*"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="10*"/>
+    </Grid.ColumnDefinitions>
+
+    <DockPanel Grid.Row="0" Grid.Column="0">
+      <WrapPanel DockPanel.Dock="Top">
+        <Button
+            DockPanel.Dock="Top"
+            Padding="2"
+            Margin="0,0,10,0"
+            Command="{Binding ReOpenPegCode}">
+          ReOpen
+        </Button>
+        <Button
+            DockPanel.Dock="Top"
+            Padding="2"
+            Command="{Binding SavePegCode}"
+            HotKey="Ctrl+S">
+          Save
+        </Button>
+      </WrapPanel>
+
+      <ae:TextEditor
+          SyntaxHighlighting="C#"
+          ShowLineNumbers="True">
+        <i:Interaction.Behaviors>
+          <bv:DocumentTextBindingBehavior Text="{Binding PegCode, Mode=TwoWay}"/>
+        </i:Interaction.Behaviors>
+      </ae:TextEditor>
+    </DockPanel>
+
+    <GridSplitter
+        Grid.Row="0" Grid.Column="1"
+        Background="Gray"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Stretch" />
+
+    <Grid Grid.Row="0" Grid.Column="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="10*"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="10*"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="10*"/>
+      </Grid.ColumnDefinitions>
+
+      <DockPanel LastChildFill="True"
+                 Grid.Row="0" Grid.Column="0">
+        <ComboBox DockPanel.Dock="Top"
+                  HorizontalAlignment="Stretch"
+                  IsVisible="{Binding HasMultipleParserMethod}"
+                  SelectedItem="{Binding SelectedParserMethodName}"
+                  Items="{Binding TargetParserMethodNames}" />
+        <TextBlock DockPanel.Dock="Top">Test Input</TextBlock>
+
+        <ae:TextEditor
+            ShowLineNumbers="True">
+          <i:Interaction.Behaviors>
+            <bv:DocumentTextBindingBehavior Text="{Binding ParseeInput, Mode=TwoWay}"/>
+          </i:Interaction.Behaviors>
+        </ae:TextEditor>
+      </DockPanel>
+
+      <GridSplitter Grid.Row="1" Grid.Column="0"
+          Background="Gray"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Center" />
+
+      <DockPanel LastChildFill="True"
+                 Grid.Row="2" Grid.Column="0">
+        <TextBlock DockPanel.Dock="Top">Test Output</TextBlock>
+
+        <TextBlock DockPanel.Dock="Top"
+                   Foreground="#AA0000" Text="{Binding ErrorMessage}"/>
+
+        <TextBlock DockPanel.Dock="Top"
+                   Foreground="#AAAA00" Text="{Binding WarnMessage}"/>
+
+        <TabControl TabStripPlacement="Bottom">
+          <TabControl.Styles>
+            <Style Selector="TabItem">
+              <Setter Property="Padding" Value="5"/>
+              <Setter Property="Margin" Value="0"/>
+              <Setter Property="FontSize" Value="12"/>
+              <Setter Property="MinHeight" Value="40"/>
+            </Style>
+          </TabControl.Styles>
+
+          <TabItem Header="Results">
+            <ScrollViewer>
+              <TextBlock Text="{Binding ParsedResult}" />
+            </ScrollViewer>
+          </TabItem>
+          <TabItem Header="Lexicals">
+            <TreeView Items="{Binding Lexicals}">
+              <TreeView.Styles>
+                <Style Selector="TreeViewItem">
+                  <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+              </TreeView.Styles>
+
+              <TreeView.DataTemplates>
+                <TreeDataTemplate ItemsSource="{Binding Items}">
+                  <TextBlock>
+                    <TextBlock.Text>
+                      <MultiBinding StringFormat="{} {0}: (ln,col) ({1},{2})=>({3},{4})">
+                        <Binding Path="Name"/>
+                        <Binding Path="StartLine"/>
+                        <Binding Path="StartColumn"/>
+                        <Binding Path="EndLine"/>
+                        <Binding Path="EndColumn"/>
+                      </MultiBinding>
+                    </TextBlock.Text>
+                  </TextBlock>
+                </TreeDataTemplate>
+              </TreeView.DataTemplates>
+            </TreeView>
+          </TabItem>
+        </TabControl>
+      </DockPanel>
+    </Grid>
+  </Grid>
+</UserControl>
