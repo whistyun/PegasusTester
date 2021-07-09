@@ -1,6 +1,6 @@
 # PegasusTester
 
-Simply Pegasus Test Application
+Simply Test Application for [Pegasus](https://github.com/otac0n/Pegasus/)
 
 ## How to use
 
