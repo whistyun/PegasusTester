@@ -1,7 +1,10 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,6 +17,49 @@ namespace PegasusTester.ViewModels
 {
     public class ProjectConfigPanelViewModel : ViewModelBase
     {
+        private bool _isLightMode = true;
+        public bool IsLightMode
+        {
+            get => _isLightMode;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isLightMode, value);
+
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    var themeSrc = value ?
+                        new Uri("avares://Avalonia.Themes.Fluent/FluentLight.xaml") :
+                        new Uri("avares://Avalonia.Themes.Fluent/FluentDark.xaml");
+
+                    var style = new StyleInclude(new Uri("avares://Markdown.AvaloniaFluentDemo/Styles"))
+                    {
+                        Source = themeSrc
+                    };
+
+
+                    var app = Application.Current;
+                    if (app.Styles.Count == 0)
+                    {
+                        app.Styles.Add(style);
+                        return;
+                    }
+
+                    var oldStyle = app.Styles[0];
+                    if (!(oldStyle is StyleInclude oldStyleInc && oldStyleInc.Source == style.Source))
+                    {
+                        app.Styles[0] = style;
+                    }
+                });
+            }
+        }
+
+        private bool _isDarkMode;
+        public bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set => this.RaiseAndSetIfChanged(ref _isDarkMode, value);
+        }
+
         private string _CurrentDirectory = "";
         public string CurrentDirectory
         {

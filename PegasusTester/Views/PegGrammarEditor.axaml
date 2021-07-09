@@ -5,6 +5,7 @@
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              xmlns:bv="using:PegasusTester.Behaviors"
+             xmlns:syn="using:PegasusTester.Syntax"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
              x:Class="PegasusTester.Views.PegGrammarEditor">
   <Grid>
@@ -36,7 +37,7 @@
       </WrapPanel>
 
       <ae:TextEditor
-          SyntaxHighlighting="C#"
+          SyntaxHighlighting="{syn:SyntaxHighlightWrapper avares://PegasusTester/Syntax/Pegasus-Mode.xshd, SystemBaseHighColor}"
           ShowLineNumbers="True">
         <i:Interaction.Behaviors>
           <bv:DocumentTextBindingBehavior Text="{Binding PegCode, Mode=TwoWay}"/>

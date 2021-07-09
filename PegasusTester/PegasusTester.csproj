@@ -8,6 +8,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Syntax\Pegasus-Mode.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Syntax\Pegasus-Mode.xshd" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.6" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="0.10.4" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
