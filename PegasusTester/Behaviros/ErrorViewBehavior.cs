@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.Xaml.Interactivity;
@@ -36,6 +37,8 @@ namespace PegasusTester.Behaviors
             {
                 _textEditor = textEditor;
                 textEditor.TextArea.TextView.BackgroundRenderers.Add(this);
+                textEditor.PointerMoved += TextEditor_PointerMoved;
+
                 this.GetObservable(ErrorInfosProperty).Subscribe(ErrorInfosPropertyChanged);
             }
         }
@@ -81,26 +84,6 @@ namespace PegasusTester.Behaviors
                         SolidColorBrush brush = new SolidColorBrush(Colors.Red, 0.1);
                         drawingContext.DrawGeometry(brush, null, geometry);
                     }
-
-                    //Point startPoint = r.BottomLeft;
-                    //Point endPoint = r.BottomRight;
-                    //
-                    //Brush usedBrush = new SolidColorBrush(Colors.Red);
-                    //double offset = 2.5;
-                    //
-                    //int count = Math.Max((int)((endPoint.X - startPoint.X) / offset) + 1, 4);
-                    //
-                    //StreamGeometry geometry = new StreamGeometry();
-                    //
-                    //using (StreamGeometryContext ctx = geometry.Open())
-                    //{
-                    //    ctx.BeginFigure(startPoint, false);
-                    //    // TODO: SquigglyUnderline
-                    //    ctx.LineTo(endPoint);
-                    //}
-                    //
-                    //Pen usedPen = new Pen(usedBrush, 1);
-                    //drawingContext.DrawGeometry(Brushes.Transparent, usedPen, geometry);
                 }
             }
         }
@@ -149,6 +132,39 @@ namespace PegasusTester.Behaviors
                 }
             }
         }
+
+        private ErrorInfoSegument? _oldMarker;
+        private void TextEditor_PointerMoved(object? sender, Avalonia.Input.PointerEventArgs e)
+        {
+            if (_textEditor is null) return;
+
+            ErrorInfoSegument? _newMarker = null;
+
+            var textView = _textEditor.TextArea.TextView;
+            foreach (var marker in _errorSeguments)
+            {
+                foreach (Rect r in BackgroundGeometryBuilder.GetRectsForSegment(textView, marker))
+                {
+                    if (r.Contains(e.GetPosition(textView)))
+                    {
+                        _newMarker = marker;
+                        goto tipshow;
+                    }
+                }
+            }
+
+        tipshow:
+            if (_newMarker is null)
+            {
+                ToolTip.SetIsOpen(_textEditor, false);
+            }
+            else if (_newMarker != _oldMarker)
+            {
+                ToolTip.SetTip(_textEditor, _newMarker.Message);
+                ToolTip.SetIsOpen(_textEditor, true);
+            }
+            _oldMarker = _newMarker;
+        }
     }
 
     public class ErrorInfo
@@ -172,17 +188,20 @@ namespace PegasusTester.Behaviors
             var offset = editor.TextArea.Document.GetOffset(location);
             var lastOffset = Math.Min(offset + 4, editor.TextArea.Document.TextLength);
 
-            return new ErrorInfoSegument(offset, lastOffset);
+            return new ErrorInfoSegument(offset, lastOffset, Message);
         }
     }
 
     public class ErrorInfoSegument : TextSegment
     {
-        public ErrorInfoSegument(int start, int end)
+        public string Message { get; }
+
+        public ErrorInfoSegument(int start, int end, string message)
         {
             StartOffset = start;
             EndOffset = end;
             Length = end - start + 1;
+            Message = message;
         }
     }
 }
