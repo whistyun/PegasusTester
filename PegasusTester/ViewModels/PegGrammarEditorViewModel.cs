@@ -1,4 +1,5 @@
 ﻿using Pegasus.Common;
+using PegasusTester.Behaviors;
 using PegasusTester.JsonConvert;
 using PegasusTester.Models;
 using ReactiveUI;
@@ -32,6 +33,13 @@ namespace PegasusTester.ViewModels
         {
             get => _PegFilePath;
             set => this.RaiseAndSetIfChanged(ref _PegFilePath, value);
+        }
+
+        private List<ErrorInfo> _BuildErrorInfos = new List<ErrorInfo>();
+        public List<ErrorInfo> BuildErrorInfos
+        {
+            get => _BuildErrorInfos;
+            set => this.RaiseAndSetIfChanged(ref _BuildErrorInfos, value);
         }
 
         private string _PegCode = "";
@@ -140,8 +148,6 @@ namespace PegasusTester.ViewModels
             set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
         }
 
-
-
         public PegGrammarEditorViewModel(
             MainWindowViewModel owner,
             string pegFilePath,
@@ -155,6 +161,23 @@ namespace PegasusTester.ViewModels
             var skim = PegasusSkimReader.FromPath(PegFilePath);
             _PegCode = skim.FullText;
             CreateParser(skim.FQCN);
+        }
+
+        public void RegisterCompileError(string fpath, int line, int column, string code, string message)
+        {
+            if (Path.GetFullPath(fpath) != Path.GetFullPath(PegFilePath))
+                return;
+
+            BuildErrorInfos.Add(new ErrorInfo(code, line, column, message));
+        }
+
+        internal void CheckErrors()
+        {
+            if (BuildErrorInfos.Count > 0)
+            {
+                // FIXME: RaisePropertyChanged has no effect to DependencyProperty...?
+                BuildErrorInfos = new List<ErrorInfo>(BuildErrorInfos);
+            }
         }
 
         public void ReOpenPegCode()
@@ -254,6 +277,8 @@ namespace PegasusTester.ViewModels
 
         public void Unload()
         {
+            BuildErrorInfos = new List<ErrorInfo>();
+
             Parser?.Dispose();
             Parser = null;
             IsBad = true;

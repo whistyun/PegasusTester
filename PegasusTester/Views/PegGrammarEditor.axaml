@@ -41,6 +41,7 @@
           ShowLineNumbers="True">
         <i:Interaction.Behaviors>
           <bv:DocumentTextBindingBehavior Text="{Binding PegCode, Mode=TwoWay}"/>
+          <bv:ErrorViewBehavior ErrorInfos="{Binding BuildErrorInfos, Mode=OneWay}"/>
         </i:Interaction.Behaviors>
       </ae:TextEditor>
     </DockPanel>

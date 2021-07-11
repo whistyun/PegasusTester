@@ -25,17 +25,26 @@ namespace PegasusTester.ViewModels
         {
             Config = new ProjectConfigPanelViewModel();
             Results = new BuildResultViewModel();
+            Results.CompileErrorOccured += Results_CompileErrorOccured;
             _TabItems = CreateTabItems();
 
-            Config.PropertyChanged += (s, e) =>
+            Config.PropertyChanged += Config_PropertyChanged;
+        }
+
+        private void Config_PropertyChanged(object? s, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
             {
-                switch (e.PropertyName)
-                {
-                    case nameof(Config.PegSources):
-                        TabItems = CreateTabItems();
-                        break;
-                }
-            };
+                case nameof(Config.PegSources):
+                    TabItems = CreateTabItems();
+                    break;
+            }
+        }
+
+        private void Results_CompileErrorOccured(string fpath, int line, int column, string code, string message)
+        {
+            foreach (var item in TabItems.OfType<PegGrammarEditorViewModel>())
+                item.RegisterCompileError(fpath, line, column, code, message);
         }
 
         public async void RequestBuild()
@@ -50,7 +59,10 @@ namespace PegasusTester.ViewModels
             await Task.Run(Build);
 
             foreach (var mdl in editors)
+            {
+                mdl.CheckErrors();
                 mdl.ReOpenPegCode();
+            }
         }
 
         private void GcCalls(int retry)
@@ -92,26 +104,23 @@ namespace PegasusTester.ViewModels
                 CreateNoWindow = true
             };
 
-            var uith = Dispatcher.UIThread;
-
-            uith.InvokeAsync(Results.Logs.Clear).Wait();
+            Results.ClearLog();
 
             var process = Process.Start(pinf);
             if (process is null)
             {
                 Results.HasError = true;
-                uith.InvokeAsync(() => "no process is started").Wait();
+                Results.AddLog("no process is started");
             }
             else
             {
-                process.OutputDataReceived += (s, e) => uith.InvokeAsync(() => Results.Logs.Add(e.Data!)).Wait();
+                process.OutputDataReceived += (s, e) => Results.AddLog(e.Data);
                 process.BeginOutputReadLine();
                 process.WaitForExit();
 
                 Results.HasError = process.ExitCode != 0;
             }
         }
-
 
         private List<ViewModelBase> CreateTabItems()
         {
