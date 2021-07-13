@@ -167,7 +167,7 @@ namespace PegasusTester.Behaviors
         }
     }
 
-    public class ErrorInfo
+    public class ErrorInfo : IEquatable<ErrorInfo>
     {
         public string Code { get; }
         public int Line { get; }
@@ -189,6 +189,16 @@ namespace PegasusTester.Behaviors
             var lastOffset = Math.Min(offset + 4, editor.TextArea.Document.TextLength);
 
             return new ErrorInfoSegument(offset, lastOffset, Message);
+        }
+
+        public bool Equals(ErrorInfo? other)
+        {
+            if (other is null) return false;
+
+            return Code == other.Code
+                && Line == other.Line
+                && Column == other.Column
+                && Message == other.Message;
         }
     }
 

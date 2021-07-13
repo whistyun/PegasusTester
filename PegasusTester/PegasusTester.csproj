@@ -20,6 +20,7 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.6" />
+    <PackageReference Include="DynamicExpresso.Core" Version="2.3.0" />
     <PackageReference Include="Pegasus" Version="4.1.0" />
   </ItemGroup>
 </Project>

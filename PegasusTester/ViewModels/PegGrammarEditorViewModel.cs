@@ -107,11 +107,6 @@ namespace PegasusTester.ViewModels
             set => this.RaiseAndSetIfChanged(ref _IsBad, value);
         }
 
-        public bool HasMultipleParserMethod
-        {
-            get => (TargetParserMethodNames ?? Array.Empty<string>()).Length > 1;
-        }
-
         private string? _SelectedParserMethodName;
         public string? SelectedParserMethodName
         {
@@ -130,7 +125,6 @@ namespace PegasusTester.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _targetParserMethodNames, value);
-                this.RaisePropertyChanged(nameof(HasMultipleParserMethod));
             }
         }
 
@@ -168,7 +162,10 @@ namespace PegasusTester.ViewModels
             if (Path.GetFullPath(fpath) != Path.GetFullPath(PegFilePath))
                 return;
 
-            BuildErrorInfos.Add(new ErrorInfo(code, line, column, message));
+            var newError = new ErrorInfo(code, line, column, message);
+
+            if (!BuildErrorInfos.Contains(newError))
+                BuildErrorInfos.Add(newError);
         }
 
         internal void CheckErrors()

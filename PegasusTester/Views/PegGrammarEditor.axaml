@@ -53,6 +53,11 @@
         VerticalAlignment="Stretch" />
 
     <Grid Grid.Row="0" Grid.Column="2">
+      <Grid.IsVisible>
+        <bv:ExpressoBinding Formula="errors.Count == 0">
+          <Binding x:Key="errors" Path="BuildErrorInfos"/>
+        </bv:ExpressoBinding>
+      </Grid.IsVisible>
       <Grid.RowDefinitions>
         <RowDefinition Height="10*"/>
         <RowDefinition Height="Auto"/>
@@ -66,9 +71,14 @@
                  Grid.Row="0" Grid.Column="0">
         <ComboBox DockPanel.Dock="Top"
                   HorizontalAlignment="Stretch"
-                  IsVisible="{Binding HasMultipleParserMethod}"
                   SelectedItem="{Binding SelectedParserMethodName}"
-                  Items="{Binding TargetParserMethodNames}" />
+                  Items="{Binding TargetParserMethodNames}">
+          <ComboBox.IsVisible>
+            <bv:ExpressoBinding Formula="methList.Length &gt; 1">
+              <Binding x:Key="methList" Path="TargetParserMethodNames" />
+            </bv:ExpressoBinding>
+          </ComboBox.IsVisible>
+        </ComboBox>
         <TextBlock DockPanel.Dock="Top">Test Input</TextBlock>
 
         <ae:TextEditor
@@ -86,6 +96,7 @@
 
       <DockPanel LastChildFill="True"
                  Grid.Row="2" Grid.Column="0">
+
         <TextBlock DockPanel.Dock="Top">Test Output</TextBlock>
 
         <TextBlock DockPanel.Dock="Top"
@@ -137,5 +148,30 @@
         </TabControl>
       </DockPanel>
     </Grid>
+
+    <DockPanel Grid.Row="0" Grid.Column="2" LastChildFill="True">
+      <DockPanel.IsVisible>
+        <bv:ExpressoBinding Formula="errors.Count != 0">
+          <Binding x:Key="errors" Path="BuildErrorInfos"/>
+        </bv:ExpressoBinding>
+      </DockPanel.IsVisible>
+
+      <ListBox Items="{Binding BuildErrorInfos}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock TextWrapping="WrapWithOverflow">
+              <TextBlock.Text>
+                <MultiBinding StringFormat="{} {0},{1} {2}: {3}">
+                  <Binding Path="Line"/>
+                  <Binding Path="Column"/>
+                  <Binding Path="Code"/>
+                  <Binding Path="Message"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
   </Grid>
 </UserControl>
