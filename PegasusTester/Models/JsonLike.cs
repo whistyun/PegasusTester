@@ -66,8 +66,7 @@ namespace PegasusTester.JsonConvert
             {
                 var dataType = data.GetType();
                 var dataProps = dataType.GetProperties()
-                                   .Where(pinf => pinf.CanRead && pinf.CanWrite)
-                                   .Where(pinf => pinf.GetSetMethod() != null)
+                                   .Where(pinf => pinf.CanRead)
                                    .Where(pinf => pinf.GetGetMethod() != null && pinf.GetGetMethod().GetParameters().Length == 0)
                                    .ToArray();
 
@@ -169,6 +168,11 @@ namespace PegasusTester.JsonConvert
                 text = "\"" + data.ToString() + "\"";
             else if (data is DateTime)
                 text = "\"" + data.ToString() + "\"";
+            else if (data.GetType().IsEnum)
+            {
+                var enumType = data.GetType();
+                text = enumType.Name + "." + Enum.GetName(enumType, data);
+            }
             else
             {
                 outTxt = "";
